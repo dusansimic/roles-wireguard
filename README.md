@@ -1,6 +1,6 @@
 # Ansible roles for WireGuard VPN
 
-> ![WARNING]
+> [!WARNING]
 > This set of roles is a work in progress. Don't use in production unless you're
 > ready to clean shit up.
 
