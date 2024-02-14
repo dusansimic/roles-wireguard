@@ -1,0 +1,69 @@
+---
+- name: Install wireguard-tools
+  ansible.builtin.dnf:
+    name: wireguard-tools
+    state: present
+- name: Set sysctl config
+  block:
+    - name: Set net.ipv4.ip_forward
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: "1"
+        sysctl_file: /etc/sysctl.d/30-ipforward.conf
+        state: present
+    - name: Set net.ipv4.conf.all.forwarding
+      ansible.posix.sysctl:
+        name: net.ipv4.conf.all.forwarding
+        value: "1"
+        sysctl_file: /etc/sysctl.d/30-ipforward.conf
+        state: present
+    - name: Set net.ipv6.conf.all.forwarding
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.forwarding
+        value: "1"
+        sysctl_file: /etc/sysctl.d/30-ipforward.conf
+        state: present
+- name: Configure firewall
+  block:
+    - name: Enable firewall service
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: true
+    - name: Set firewall options
+      block:
+        - name: Configure firewalld
+          ansible.posix.firewalld:
+            port: "{{ wg_server_port }}/udp"
+            permanent: true
+            immediate: true
+            state: enabled
+        - name: Configure masquerade for ip4
+          ansible.posix.firewalld:
+            # rich_rule: rule family=ipv4 source address=10.8.0.0/24 masquerade
+            rich_rule: rule family=ipv4 source address={{ ip4_subnet }}/{{ netmask }} masquerade
+            permanent: true
+            immediate: true
+            state: enabled
+        - name: Configure masquerade for ip6
+          ansible.posix.firewalld:
+            # rich_rule: rule family=ipv6 source address=fd42:42:42::0/24 masquerade
+            rich_rule: rule family=ipv6 source address={{ ip6_subnet }}/{{ netmask }} masquerade
+            permanent: true
+            immediate: true
+            state: enabled
+- name: Create configuration file
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: u=rw,g=,o=
+    owner: root
+    group: root
+    seuser: system_u
+    serole: object_r
+    setype: etc_t
+- name: Start server
+  ansible.builtin.systemd:
+    name: wg-quick@wg0.service
+    state: started
+    enabled: true

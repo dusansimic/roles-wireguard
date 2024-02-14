@@ -1,0 +1,17 @@
+{
+  "name": "Ubuntu",
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/ansible": {
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.ansible"
+      ]
+    }
+  },
+  "postCreateCommand": "pipx install ansible-lint && if [ -f 'ansible/requirements.yaml' ]; then ansible-galaxy collection install -r ansible/requirements.yaml; fi"
+}
