@@ -2,9 +2,10 @@
   "name": "Ubuntu",
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
   "features": {
-    "ghcr.io/devcontainers-contrib/features/ansible": {
+    "ghcr.io/devcontainers-contrib/features/ansible:2": {
       "version": "latest"
-    }
+    },
+    "ghcr.io/devcontainers-contrib/features/wireguard-apt-get:1": {}
   },
   "customizations": {
     "vscode": {
