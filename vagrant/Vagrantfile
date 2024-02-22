@@ -8,8 +8,6 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
   end
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "../ansible/server.yaml"
-  end
+  config.vm.provision "ansible", playbook: "../ansible/server.yaml"
   config.vm.synced_folder ".", "/vagrant", disabled: true
 end
