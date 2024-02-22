@@ -55,8 +55,9 @@
     seuser: system_u
     serole: object_r
     setype: etc_t
-- name: Start server
+  register: config
+- name: Restart server
   ansible.builtin.systemd:
     name: wg-quick@wg0.service
-    state: started
+    state: restarted
     enabled: true
