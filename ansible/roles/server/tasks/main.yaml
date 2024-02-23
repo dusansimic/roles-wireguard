@@ -16,6 +16,7 @@
   ansible.builtin.template:
     src: wg.conf.j2
     dest: /etc/wireguard/{{ wg_interface }}.conf
+    backup: true
     mode: u=rw,g=,o=
     owner: root
     group: root
