@@ -1,0 +1,15 @@
+---
+- name: Install wireguard-tools
+  ansible.builtin.apt:
+    name: wireguard-tools
+    state: present
+# TODO: Add firewall configuration
+- name: Configure firewall
+  block:
+    - name: Enable firewall
+      ansible.builtin.ufw:
+        state: enabled
+    - name: Configure masquerade for ip4
+      ansible.builtin.ufw:
+        route: true
+        rule: allow

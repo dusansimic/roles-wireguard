@@ -1,13 +1,23 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+machines = [
+  { :name => "rocky9", :box => "rockylinux/9", :playbook => "rocky_9" },
+  { :name => "jammy", :box => "ubuntu/jammy64", :playbook => "ubuntu_jammy" },
+]
+
 Vagrant.configure("2") do |config|
-  config.vm.box = "rockylinux/9"
-  config.vm.box_version = "3.0.0"
-  config.vm.network "private_network", ip: "10.255.0.10"
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = "2048"
+  machines.each_with_index do |machine, i|
+    config.vm.define machine[:name] do |node|
+      node.vm.box = machine[:box]
+      node.vm.network "private_network", ip: "10.255.0.#{10 + i}"
+
+      node.vm.provider "virtualbox" do |vb|
+        vb.memory = "2048"
+      end
+
+      config.vm.provision "ansible", playbook: "../ansible/.test_playbooks/#{machine[:playbook]}.yaml"
+      config.vm.synced_folder ".", "/vagrant", disabled: true
+    end
   end
-  config.vm.provision "ansible", playbook: "../ansible/server.yaml"
-  config.vm.synced_folder ".", "/vagrant", disabled: true
 end

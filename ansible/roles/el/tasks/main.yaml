@@ -1,0 +1,32 @@
+---
+- name: Install wireguard-tools
+  ansible.builtin.dnf:
+    name: wireguard-tools
+    state: present
+- name: Configure firewall
+  block:
+    - name: Enable firewall service
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: true
+    - name: Set firewall options
+      block:
+        - name: Configure firewalld
+          ansible.posix.firewalld:
+            port: "{{ wg_server_port }}/udp"
+            permanent: true
+            immediate: true
+            state: enabled
+        - name: Configure masquerade for ip4
+          ansible.posix.firewalld:
+            rich_rule: rule family=ipv4 source address={{ wg_subnet4 }}/{{ wg_netmask4 }} masquerade
+            permanent: true
+            immediate: true
+            state: enabled
+        - name: Configure masquerade for ip6
+          ansible.posix.firewalld:
+            rich_rule: rule family=ipv6 source address={{ wg_subnet6 }}/{{ wg_netmask6 }} masquerade
+            permanent: true
+            immediate: true
+            state: enabled
