@@ -33,31 +33,29 @@
             state: enabled
         - name: Configure masquerade for ip4
           ansible.posix.firewalld:
-            # rich_rule: rule family=ipv4 source address=10.8.0.0/24 masquerade
-            rich_rule: rule family=ipv4 source address={{ ip4_subnet }}/{{ netmask }} masquerade
+            rich_rule: rule family=ipv4 source address={{ wg_subnet4 }}/{{ wg_netmask4 }} masquerade
             permanent: true
             immediate: true
             state: enabled
         - name: Configure masquerade for ip6
           ansible.posix.firewalld:
-            # rich_rule: rule family=ipv6 source address=fd42:42:42::0/24 masquerade
-            rich_rule: rule family=ipv6 source address={{ ip6_subnet }}/{{ netmask }} masquerade
+            rich_rule: rule family=ipv6 source address={{ wg_subnet6 }}/{{ wg_netmask6 }} masquerade
             permanent: true
             immediate: true
             state: enabled
 - name: Create configuration file
   ansible.builtin.template:
-    src: wg0.conf.j2
-    dest: /etc/wireguard/wg0.conf
+    src: wg.conf.j2
+    dest: /etc/wireguard/{{ wg_interface }}.conf
     mode: u=rw,g=,o=
     owner: root
     group: root
-    seuser: system_u
+    seuser: unconfined_u
     serole: object_r
     setype: etc_t
   register: config
 - name: Restart server
   ansible.builtin.systemd:
-    name: wg-quick@wg0.service
+    name: wg-quick@{{ wg_interface }}
     state: restarted
     enabled: true

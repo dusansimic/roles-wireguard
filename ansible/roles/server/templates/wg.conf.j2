@@ -1,0 +1,11 @@
+[Interface]
+PrivateKey = {{ wg_server_private_key }}
+Address = {{ wg_server_addr4 }}/{{ wg_netmask4 }}, {{ wg_server_addr6 }}/{{ wg_netmask6 }}
+ListenPort = {{ wg_server_port }}
+
+{% for peer in wg_peers %}
+[Peer]
+PublicKey = {{ peer.public_key }}
+AllowedIPs = {{ peer.addr4 }}/32, {{ peer.addr6 }}/128
+
+{% endfor %}
