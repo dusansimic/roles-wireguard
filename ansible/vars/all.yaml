@@ -1,0 +1,19 @@
+---
+wg_interface: wg0
+wg_out_interface: enp0s3 # this is needed for ubuntu
+
+wg_server_addr4: 10.8.0.1
+wg_server_addr6: fd04:2be0:1e3c::1
+wg_server_port: 51820
+wg_persistent_keepalive: 25
+wg_subnet4: 10.8.0.0
+wg_subnet6: fd04:2be0:1e3c::0
+wg_netmask4: 24
+wg_netmask6: 64
+
+wg_server_private_key: GH78HvpfHEiqhEN+pZpXMGJ0RAdckZrsk8YfdJ56iUk=
+
+wg_peers:
+  - public_key: wtoV9Sy0k2tcQ5rS44kR3zp23anDCJp84FbQLCVf8Uk=
+    addr4: 10.8.0.2
+    addr6: fd04:2be0:1e3c::2

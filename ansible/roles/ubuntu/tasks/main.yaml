@@ -3,13 +3,28 @@
   ansible.builtin.apt:
     name: wireguard-tools
     state: present
-# TODO: Add firewall configuration
 - name: Configure firewall
   block:
     - name: Enable firewall
       ansible.builtin.ufw:
         state: enabled
-    - name: Configure masquerade for ip4
+    - name: Configure ufw
       ansible.builtin.ufw:
         route: true
         rule: allow
+        interface_in: "{{ wg_interface }}"
+        interface_out: "{{ wg_out_interface }}"
+    - name: Configure masquerade for ip4
+      ansible.builtin.iptables:
+        ip_version: ipv4
+        table: nat
+        chain: POSTROUTING
+        out_interface: "{{ wg_out_interface }}"
+        jump: MASQUERADE
+    - name: Configure masquerade for ip6
+      ansible.builtin.iptables:
+        ip_version: ipv6
+        table: nat
+        chain: POSTROUTING
+        out_interface: "{{ wg_out_interface }}"
+        jump: MASQUERADE
