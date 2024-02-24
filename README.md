@@ -5,17 +5,17 @@ they can be used for any other type of server.
 
 ## Roles
 
-### server
+### [server](./ansible/roles/server/)
 
 The server role actually configures non-distro-specific things for the VPN
 server and starts the systemd service using `wg-quick` service.
 
-### el
+### [el](./ansible/roles/el/)
 
 Role that installs dependencies and sets up firewall rules on Enterprise Linux
 distributions (think RHEL, not SUSE).
 
-### ubuntu
+### [ubuntu](./ansible/roles/ubuntu/)
 
 Role that installs dependencies and sets up firewall rules on Ubuntu
 distributions.
