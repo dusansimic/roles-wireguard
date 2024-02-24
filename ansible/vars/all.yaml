@@ -5,7 +5,6 @@ wg_out_interface: enp0s3 # this is needed for ubuntu
 wg_server_addr4: 10.8.0.1
 wg_server_addr6: fd04:2be0:1e3c::1
 wg_server_port: 51820
-wg_persistent_keepalive: 25
 wg_subnet4: 10.8.0.0
 wg_subnet6: fd04:2be0:1e3c::0
 wg_netmask4: 24
