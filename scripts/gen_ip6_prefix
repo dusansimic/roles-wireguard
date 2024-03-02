@@ -1,0 +1,8 @@
+#!/bin/bash
+
+_TIMESTAMP="$(date +%s%N)"
+_MACHINE_ID="$(cat /var/lib/dbus/machine-id)"
+_HASH="$(printf $_TIMESTAMP$_MACHINE_ID | sha1sum | cut -c -40)"
+_PREFIX="fd$(cut -c 31- <<< $_HASH)"
+
+echo "$_PREFIX"
